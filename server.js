@@ -30,11 +30,12 @@ require("./config/passport")(passport);
 connectDB();
 
 // EJS Layouts
-app.use(expressLayouts)
-app.set('layout', './layouts/main')
+// app.use(expressLayouts)
+// app.set('layout', './layouts/main')
 
-// Using EJS for Views
-app.set("view engine", "ejs");
+// Using JSX for Views
+app.set("view engine", "jsx");
+app.engine('jsx', require('express-react-views').createEngine());
 
 // Static Folder
 app.use(express.static("public"));

@@ -10,17 +10,26 @@ module.exports = {
         const { firstName, lastName, email, password, confirmPassword } = req.body;
         const validationErrors = {emailTakenError: false, emailError: false, passwordError: false, confirmError: false};
         
+        let errors = []
         // Not a valid email
-        if (!validator.isEmail(email))
+        if (!validator.isEmail(email)){
+            errors.push({msg: 'Please enter a valid email.'})
             validationErrors.emailError = true;
+        }
         // Password is not at least 6 characters
-        if (!validator.isLength(password, { min:6 }))
+        if (!validator.isLength(password, { min:6 })){
+            errors.push({msg: 'Password needs to be at least 6 characters.'})
             validationErrors.passwordError = true;
+        }
+
         // Does password match the password confirmation
-        if (!validator.equals(confirmPassword, req.body.password))
+        if (!validator.equals(confirmPassword, req.body.password)){
+            errors.push({msg: 'Password and Confirm Password need to match.'})
             validationErrors.confirmError = true;
-        
+        }
+
         if (Object.values(validationErrors).indexOf(true) > -1) {
+            req.flash("errors", errors)
             res.render('homeowner/register', {
                 validationErrors,
                 firstName,
@@ -68,14 +77,20 @@ module.exports = {
         const validationErrors = {emailError: false, passwordError: false}
         const { email, password} = req.body
 
+        let errors = []
         // Not a valid email
-        if (!validator.isEmail(email))
-            validationErrors.emailError = true;
+        if (!validator.isEmail(email)){
+            errors.push({msg: 'Please enter a valid email.'})
+            validationErrors.emailError = true
+        }
         // Password is not at least 6 characters
-        if (!validator.isLength(password, { min:6 }))
+        if (!validator.isLength(password, { min:6 })){
+            errors.push({msg: 'Password needs to be at least 6 characters.'})
             validationErrors.passwordError = true;
+        }
 
         if (Object.values(validationErrors).indexOf(true) > -1) {
+            req.flash("errors", errors)
             res.render('homeowner/login', {
                 validationErrors,
                 email: req.body.email
